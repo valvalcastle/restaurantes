@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Restaurantes{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>Restaurantes</h1>
+  <a class="btn btn-primary" href="/restaurants/new">Agregar restaurante</a>
+</div>
+
+<form class="filters" method="get" action="/">
+  <label>Ciudad
+    <select name="city">
+      <option value="">Todas</option>
+      {% for c in cities %}
+        <option value="{{ c }}" {% if c == filters.city %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Categoría
+    <select name="category">
+      <option value="">Todas</option>
+      {% for c in categories %}
+        <option value="{{ c }}" {% if c == filters.category %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Precio
+    <select name="price">
+      <option value="">Cualquiera</option>
+      {% for p in (1, 2, 3) %}
+        <option value="{{ p }}" {% if p == filters.price %}selected{% endif %}>{{ p | price_label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Ordenar por
+    <select name="order_by">
+      <option value="name" {% if filters.order_by == "name" %}selected{% endif %}>Nombre (A-Z)</option>
+      <option value="avgRating" {% if filters.order_by == "avgRating" %}selected{% endif %}>Mejor calificados</option>
+    </select>
+  </label>
+  <div class="filter-actions">
+    <button class="btn" type="submit">Filtrar</button>
+    {% if has_filters %}<a class="link" href="/">Quitar filtros</a>{% endif %}
+  </div>
+</form>
+
+{% if restaurants %}
+  <ul class="grid">
+    {% for r in restaurants %}
+      <li class="card">
+        <img class="card-img"
+             src="{{ r.photoUrl or '/static/img/placeholder.svg' }}"
+             alt="Foto de {{ r.name }}" loading="lazy"
+             onerror="this.onerror=null;this.src='/static/img/placeholder.svg'">
+        <div class="card-body">
+          <h2 class="card-title">{{ r.name }}</h2>
+          <p class="meta">{{ r.category }} en {{ r.city }}</p>
+          <p class="meta">
+            <span class="price">{{ r.price | price_label }}</span>
+            {% if r.numRatings %}
+              <span class="rating">★ {{ "%.1f"|format(r.avgRating) }} ({{ r.numRatings }})</span>
+            {% else %}
+              <span class="muted">Sin reseñas todavía</span>
+            {% endif %}
+          </p>
+          <a class="btn btn-block" href="/restaurants/{{ r.id }}">Ver detalles</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if next_url %}
+    <p class="more"><a class="btn" href="{{ next_url }}">Ver más restaurantes</a></p>
+  {% endif %}
+{% else %}
+  <div class="empty">
+    {% if has_filters %}
+      <p>Ningún restaurante coincide con esos filtros.</p>
+      <a class="btn" href="/">Quitar filtros</a>
+    {% else %}
+      <p>Todavía no hay restaurantes registrados.</p>
+      <a class="btn btn-primary" href="/restaurants/new">Agregar el primero</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

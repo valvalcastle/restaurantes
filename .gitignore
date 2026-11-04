@@ -1,0 +1,27 @@
+# Entorno y secretos
+.venv/
+.env
+secrets/*
+!secrets/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Credenciales JSON (cuentas de servicio) fuera de Git...
+*.json
+# ...excepto los JSON de configuración del proyecto
+!package.json
+!firebase.json
+!firestore.indexes.json
+
+# Logs de Firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Editor / SO
+.DS_Store
+.vscode/
+.idea/

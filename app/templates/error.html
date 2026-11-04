@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Error {{ status_code }}{% endblock %}
+
+{% block content %}
+<div class="empty">
+  <h1>{{ status_code }}</h1>
+  <p>{{ message }}</p>
+  <a class="btn btn-primary" href="/">Volver al listado</a>
+</div>
+{% endblock %}
